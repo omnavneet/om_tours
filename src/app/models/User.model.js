@@ -3,12 +3,7 @@ import mongoose, {Schema} from "mongoose";
 const UserSchema = new Schema({
     name: {
         type: String,   
-        required: [true, "User name is required!!"],
-        trim: true
-    },
-    username: {
-        type: String,   
-        required: [true, "User name is required!!"],
+        required: [true, "name is required!!"],
         trim: true
     },
     phone: {
