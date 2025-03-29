@@ -1,7 +1,7 @@
 import CredentialProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs';
-import dbConnect from '@/lib/dbConnect';
-import UserModel from '@/models/User.model';
+import dbConnect from '../../../lib/dbConnect';
+import UserModel from '../../../models/User.model';
 
 export const authOptions = {
     providers: [
@@ -9,7 +9,7 @@ export const authOptions = {
             id: "credentials",
             name: "Credentials",
             credentials: {
-                username: { label: "Username", type: "text", placeholder: "Username must be unique" },
+                email: { label: "email", type: "text", placeholder: "Email must be unique" },
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
@@ -17,11 +17,10 @@ export const authOptions = {
                 try {
                     const user = await UserModel.findOne({
                         $or: [
-                            { username: credentials.username },
-                            { phone: credentials.username }
+                            { email: credentials.identifier },
+                            { phone: credentials.identifier }
                         ]
                     });
-
                     if (!user) {
                         throw new Error("User not found");
                     }
@@ -38,7 +37,7 @@ export const authOptions = {
                     throw new Error(err);
                 }
             }
-        })
+        }),
     ],
     pages: {
         signIn: '/sign-in',
@@ -53,10 +52,9 @@ export const authOptions = {
         async jwt({ token, user }) {
             if (user) {
                 token._id = user._id?.toString();
-                token.username = user.username;
+                token.email = user.email;
                 token.name = user.name;
             }
-
             return token
         },
         async session({ session, token }) {

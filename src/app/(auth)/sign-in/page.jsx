@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
-import { Loader2 } from "lucide-react";
+import { Loader2, LogIn } from "lucide-react";
 import { motion } from "framer-motion";
+import { Input } from "../../../components/ui/input";
+import { Button } from "../../../components/ui/button";
 
 function Page() {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,18 +24,23 @@ function Page() {
     const onSubmit = async (data) => {
         setIsSubmitting(true);
         try {
+            console.log(data);
+            
             const result = await signIn('credentials', {
                 redirect: false,
                 identifier: data.identifier,
                 password: data.password
             });
 
+            console.log(result);
+            
+
             if (result?.error) {
                 console.error("Login Failed:", result?.error);
             }
 
             if (result?.url) {
-                router.replace('/user');
+                router.replace('/dashboard');
             }
         } catch (error) {
             console.error("Error signing in:", error);
