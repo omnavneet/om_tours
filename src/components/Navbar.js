@@ -103,7 +103,7 @@ const Navbar = () => {
       <div className="flex space-x-2">
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Link
-            href={"/check_signin"}
+            href={"/sign-in"}
             className="bg-white hover:bg-gray-100 text-orange-600 px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-300 shadow-md border border-gray-100"
           >
             Sign In

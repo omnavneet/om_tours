@@ -31,7 +31,7 @@ export default function Home() {
           </p>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Link
-              href={"/check_signup"}
+              href={"/sign-up"}
               className="inline-block bg-orange-600 hover:bg-orange-700 text-white text-base px-8 py-3 rounded-lg mt-8 font-semibold shadow-lg transition-all duration-300"
             >
               Get Started
