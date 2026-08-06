@@ -11,6 +11,7 @@ import { Loader2 } from "lucide-react"
 import { motion } from "framer-motion"
 import { Input } from "../../../components/ui/input"
 import { Button } from "../../../components/ui/button"
+import { toast } from 'react-hot-toast';
 
 const signUpSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
@@ -41,33 +42,32 @@ function Page() {
     setIsSubmitting(true);
     try {
       const response = await axios.post('/api/sign-up', data);
-      console.log(response);
-      
-      // toast((response.success) ? 'Success' : 'Failure', {
-      //   description: response.data.message
-      // });
 
-      if (response.data.success) {
-        router.replace(`/sign-in`);
-        setIsSubmitting(false);
+      if (response.data?.success) {
+        toast.success(response.data.message || 'Account created successfully!');
+        router.replace('/sign-in');
       } else {
-        const error = response.data.message;
-        console.error("Error in signup of user, ", error);
-        toast.error('SignUp Failed, Please try again', {
-          description: error,
-        })
+        toast.error(response.data?.message || 'Sign-up failed');
       }
     } catch (error) {
-      console.error("Error in signup of user, ", error);
-      const axiosError = error;
-      const errorMessage = axiosError.response?.data.message;
-      toast.error('SignUp Failed, Please try again', {
-        description: errorMessage,
-      })
+      const backendMessage = 
+        error.response?.data?.message || 
+        error.response?.data?.error || 
+        'An unexpected error occurred. Please try again.';
+
+      toast.error('Sign-Up Failed', {
+        description: backendMessage,
+      });
+      if (backendMessage.toLowerCase().includes('email')) {
+        form.setError('email', {
+          type: 'manual',
+          message: backendMessage,
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-orange-50 bg-fixed overflow-auto">
